@@ -1,0 +1,123 @@
+# imports
+from tkinter import *
+import os
+from PIL import ImageTk, Image
+
+#Main Screen
+homepage = Tk()
+homepage.title('Cash for All')
+
+#Functions
+def finish_reg():
+            Name = temp_Name.get()
+            Age = temp_Age.get()
+            Email = temp_Email.get()
+            Password = temp_Password.get()
+            all_accounts = os.listdir()
+
+            if Name == "" or Age == "" or Email == "" or Password == "":
+                        notif.config(fg="red",text="*All Fields Required*")
+                        return
+            print("Registration Completed")
+
+            for Email_check in all_accounts:
+                        if Email == Email_check:
+                                    notif.config(fg="red",text="*Account already Exists*")
+                                    return
+                        else:
+                                    new_file =  open(Email,"w")
+                                    new_file.write(Name+'\n')
+                                    new_file.write(Email+'\n')
+                                    new_file.write(Age+'\n')
+                                    new_file.write(Password+'\n')
+                                    new_file.write('0')
+                                    new_file.close()
+                                    notif.config(fg="green",text="Account Created")
+                                    
+def register():
+            #Vars
+            global temp_Name
+            global temp_Age
+            global temp_Email
+            global temp_Password
+            global notif
+            temp_Name = StringVar()
+            temp_Age = StringVar()
+            temp_Email = StringVar()
+            temp_Password = StringVar()
+            
+            #Register Screen
+            register_screen = Toplevel(homepage)
+            register_screen.title("Register")
+
+            #Labels
+            Label(register_screen, text="Please enter details below", font=('calibri',12)).grid(row=0,sticky=N,pady=10)
+            Label(register_screen, text="Name", font=('calibri',8)).grid(row=1,sticky=W)
+            Label(register_screen, text="Age", font=('calibri',8)).grid(row=2,sticky=W)
+            Label(register_screen, text="Email", font=('calibri',8)).grid(row=3,sticky=W)
+            Label(register_screen, text="Password", font=('calibri',8)).grid(row=4,sticky=W)
+            notif = Label(register_screen, font=('calibri',12))
+            notif.grid(row=6,sticky=N,pady=10)
+
+            #Enteries
+            Entry(register_screen,textvariable=temp_Name).grid(row=1,column=1)
+            Entry(register_screen,textvariable=temp_Age).grid(row=2,column=1)
+            Entry(register_screen,textvariable=temp_Email).grid(row=3,column=1)
+            Entry(register_screen,textvariable=temp_Password,show="*").grid(row=4,column=1)
+
+            #Buttons
+            Button(register_screen, text="Register",command = finish_reg, font=('calibri',10)).grid(row=5,sticky=N,pady=10)
+def login_session():
+            global Login_Email
+            all_accounts = os.listdir()
+            Login_Email= temp_Login_Email.get()
+            Login_Password = temp_Login_Password.get()
+            for Email in all_accounts:
+                        if Email == Login_Email:
+                                    file = open(Email,"r")
+                                    file_data = file.read()
+                                    file_data = file_data.split('\n')
+                                    Password = file_data[3]
+                                    #Account Dashboard
+                        if Login_Password == "password":
+                                    login_screen.destroy()
+                                    Account_Dashboard = Toplevel(homepage)
+                                    Account_Dashboard.title('Dashboard')
+                                    return
+                        else:
+                                    login_notif.config(fg="red",text="Password Incorrect")
+                                    return
+                        login_notif.config(fg="red",text="No Account Found")
+
+def login():
+            #Vars
+            global temp_Login_Email
+            global temp_Login_Password
+            global login_notif
+            global login_screen
+            temp_Login_Email = StringVar()
+            temp_Login_Password = StringVar()
+            #Login Screen
+            login_screen = Toplevel(homepage)
+            login_screen.title('Login')
+            #Labels
+            Label(login_screen, text="Login to your account", font=('calibri',12)).grid(row=0,sticky=N,pady=10)
+            Label(login_screen, text="Email", font=('calibri',8)).grid(row=1,sticky=W)
+            Label(login_screen, text="Password", font=('calibri',8)).grid(row=2,sticky=W)
+            login_notif = Label(login_screen, font=('calibri',12))
+            login_notif.grid(row=4,sticky=N)
+            #Entry
+            Entry(login_screen,textvariable=temp_Login_Email).grid(row=1,column=1,padx=5)
+            Entry(login_screen,textvariable=temp_Login_Password,show="*").grid(row=2,column=1,padx=5)
+            #Buttons
+            Button(login_screen, text="Login", command=login_session,width=15,font=('calibri',10)).grid(row=3,sticky=W,pady=5,padx=5)
+
+#Labels
+Label(homepage, text = "Custom Banking", font = ('calibri',14)).grid(row=0,sticky=N,pady=10)
+Label(homepage, text = "Banking For the Future", font = ('calibri',10)).grid(row=1,sticky=N)
+
+#Buttons
+Button(homepage, text = "Register", font = ('calibri',8), width=20,command=register).grid(row=3,sticky=N)
+Button(homepage, text = "Login", font = ('calibri',8), width=20,command=login).grid(row=4,sticky=N,pady=5)
+
+homepage.mainloop()
