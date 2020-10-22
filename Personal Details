@@ -1,0 +1,18 @@
+def personal_details():
+            #Vars
+            file = open(login_email, 'r')
+            file_data = file.read
+            user_details = file_data.split('\n')
+            details_name = user_details[0]
+            details_email = user_details[1]
+            details_age = user_details[2]
+            details_balance = user_details[4]
+            #Personal details screen
+            personal_details_screen = Toplevel(homepage)
+            personal_details_screen.title('Personal Details')
+            #Labels
+            Label(personal_details_screen, text="Personal Details", font=('calibri',10)).grid(row=0,sticky=N,pady=10)
+            Label(personal_details_screen, text="Name : "+details_name, font=('calibri',10)).grid(row=1,sticky=W)
+            Label(personal_details_screen, text="Email : "+details_email, font=('calibri',10)).grid(row=2,sticky=W)
+            Label(personal_details_screen, text="Age : "+details_age, font=('calibri',10)).grid(row=3,sticky=W)
+            Label(personal_details_screen, text="Balance :£"+details_balance, font=('calibri',10)).grid(row=4,sticky=W)
